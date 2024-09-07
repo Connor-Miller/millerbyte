@@ -1,0 +1,29 @@
+.card {
+    height: calc(8 * var(--m));
+    width: calc(12 * var(--m));
+    background: linear-gradient(120deg, #ff8064, #725bdc);
+    color: black;
+    border-radius: calc(0.5 * var(--m));
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--m);
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+}
+
+button {
+    background-color: #000;
+    font-size: calc(0.4 * var(--m));
+    border: none;
+    color: #e5e5e5;
+    font-weight: 400;
+    padding: calc(0.35 * var(--m)) calc(0.8 * var(--m));
+    border-radius: calc(0.3 * var(--m));
+}
