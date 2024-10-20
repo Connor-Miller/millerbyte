@@ -7,24 +7,44 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start:server": "ts-node src/server/index.ts",
+    "start:client": "cd client && npm start",
+    "start": "concurrently \"npm run start:server\" \"npm run start:client\""
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.59.15",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "lucide-react": "^0.453.0",
+    "pg": "^8.13.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-resizable": "^3.0.5",
+    "react-table": "^7.8.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
     "@tanstack/router-devtools": "^1.56.1",
     "@tanstack/router-plugin": "^1.56.1",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.7.7",
+    "@types/pg": "^8.11.10",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@types/react-resizable": "^3.0.8",
+    "@types/react-table": "^7.7.20",
     "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.0.1",
     "eslint": "^9.9.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
-    "typescript": "^5.5.3",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"
   }

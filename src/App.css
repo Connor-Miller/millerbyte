@@ -1,5 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 #root {
-  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -11,4 +14,19 @@ main.content {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+table {
+  width: 100%; /* Ensure the table takes full width */
+  border-collapse: collapse; /* Remove space between cells */
+}
+
+td {
+  padding: 0; /* Remove padding from table cells */
+  margin: 0; /* Remove margin from table cells */
+}
+
+th {
+  padding: 0; /* Remove padding from header cells */
+  margin: 0; /* Remove margin from header cells */
 }

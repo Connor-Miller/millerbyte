@@ -2,7 +2,8 @@ import { createRootRoute, createRoute, createRouter, RouteComponent, Outlet } fr
 import Home from './pages/home'
 import Header from './components/header'
 import Footer from './components/footer'
-
+import About from './pages/about'
+import HoloTacoTracker from './pages/holoTacoTracker'
 
 interface Route {
     path: string
@@ -24,6 +25,8 @@ const rootRoute = createRootRoute({
 // Update routeList
 const routeList: Route[] = [
     { path: '/', component: Home },
+    { path: '/about', component: About },
+    { path: '/holoTacoTracker', component: HoloTacoTracker },
 ]
 
 // Update createRouteTree function

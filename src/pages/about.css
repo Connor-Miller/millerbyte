@@ -1,0 +1,99 @@
+.about-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  h1, h2, h3, h4 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+  }
+  
+  .name {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    text-align: center;
+    color: #3498db;
+    margin-bottom: 2rem;
+  }
+  
+  section {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 5px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .job, .degree {
+    margin-bottom: 1.5rem;
+  }
+  
+  .company, .school, .date {
+    font-style: italic;
+    color: #7f8c8d;
+  }
+  
+  ul {
+    padding-left: 1.5rem;
+  }
+  
+  li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .skills ul, .languages ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .skills li, .languages li {
+    background-color: #3498db;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .skills li:hover, .languages li:hover {
+    background-color: #2980b9;
+  }
+  
+  @media (max-width: 600px) {
+    .about-container {
+      padding: 1rem;
+    }
+    
+    .name {
+      font-size: 2rem;
+    }
+    
+    .title {
+      font-size: 1.2rem;
+    }
+  }

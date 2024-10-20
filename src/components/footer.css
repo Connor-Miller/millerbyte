@@ -19,22 +19,22 @@ footer {
   align-items: flex-end;
 }
 
-.backdrop {
+/* .backdrop {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 1;
-  background: linear-gradient(
+  /* background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0),
     rgba(0, 0, 0, calc(var(--scroll-position, 0) / 1000))
-  );
-  backdrop-filter: blur(calc(var(--scroll-position, 0) / 80 * 2px));
-  -webkit-backdrop-filter: blur(calc(var(--scroll-position, 0) / 80 * 2px));
-  transition: background 0.3s ease, backdrop-filter 0.3s ease;
-}
+  ); */
+  /* backdrop-filter: blur(calc(var(--scroll-position, 0) / 80 * 2px));
+  -webkit-backdrop-filter: blur(calc(var(--scroll-position, 0) / 80 * 2px)); */
+  /* transition: background 0.3s ease, backdrop-filter 0.3s ease; */
+/*} */
 
 .col {
   flex-direction: column;
