@@ -1,13 +1,11 @@
-import { TacoBottle } from "../../utils/holoTacoTypes";
-import PostgresService from "../postgresService";
-
+import PostgresService from "../postgresService.js";
 
 /**
  * Add a new bottle to the database
  * @param bottle - The bottle to add
  * @returns The result of the query
  */
-export function addNewBottle(bottle: TacoBottle) {
+export function addNewBottle(bottle) {
     const sqlString = `INSERT INTO bottles (bottleId, polishName, ownerEmail, opened, swatched, location)
     VALUES ($1, $2, $3, $4, $5, $6)`;
 
@@ -22,8 +20,8 @@ export function addNewBottle(bottle: TacoBottle) {
  * @param email - The email to get bottles for
  * @returns The result of the query
  */
-export function getAllBottlesByEmail(email: string) {
-    const sqlString = `SELECT * FROM bottles WHERE email = $1`;
+export function getAllBottlesByEmail(email) {
+    const sqlString = `SELECT * FROM bottles WHERE ownerEmail = $1`;
     const postgresService = new PostgresService();
     return postgresService.performQuery(sqlString, [email]);
 }
@@ -33,7 +31,7 @@ export function getAllBottlesByEmail(email: string) {
  * @param bottleId - The id of the bottle to get
  * @returns The result of the query
  */
-export function getBottleById(bottleId: string) {
+export function getBottleById(bottleId) {
     const sqlString = `SELECT * FROM bottles WHERE bottleId = $1`;
     const postgresService = new PostgresService();
     return postgresService.performQuery(sqlString, [bottleId]);
@@ -44,8 +42,8 @@ export function getBottleById(bottleId: string) {
  * @param bottle - The bottle to update
  * @returns The result of the query
  */
-export function updateBottle(bottle: TacoBottle) {
-    const sqlString = `UPDATE bottles SET opened = $1, swatched = $2, location = $3 WHERE bottleId = $4`;
+export function updateBottle(bottle) {
+    const sqlString = `UPDATE bottles SET isOpened = $1, isSwatched = $2, location = $3 WHERE bottleId = $4`;
     const postgresService = new PostgresService();
     return postgresService.performQuery(sqlString, [bottle.opened, bottle.swatched, bottle.location, bottle.bottleId]);
 }
@@ -55,7 +53,7 @@ export function updateBottle(bottle: TacoBottle) {
  * @param bottleId - The id of the bottle to delete
  * @returns The result of the query
  */
-export function deleteBottle(bottleId: string) {
+export function deleteBottle(bottleId) {
     const sqlString = `DELETE FROM bottles WHERE bottleId = $1`;
     const postgresService = new PostgresService();
     return postgresService.performQuery(sqlString, [bottleId]);

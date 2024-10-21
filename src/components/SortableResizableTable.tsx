@@ -1,5 +1,3 @@
-"use client"
-
 import React, { useMemo, useState, useCallback } from 'react'
 import { useTable, useSortBy, Column, useBlockLayout, useResizeColumns } from 'react-table'
 import { ChevronDown, ChevronUp, ArrowUpDown, Edit, Save } from 'lucide-react'
@@ -17,14 +15,23 @@ interface TableProps {
   columns?: TableColumn[]
   data?: any[]
   onSaveChanges?: (rowIndex: number, columnId: string, value: any) => void
+  onAddRow?: () => void
+  title?: string
 }
 
-export default function SortableResizableTable({ columns = [], data = [], onSaveChanges }: TableProps) {
+// Function to format dates
+const formatDate = (date: any) => {
+    if (!date) return ''; // Handle null or undefined dates
+    return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(date));
+};
+
+export default function SortableResizableTable({ columns = [], data = [], onSaveChanges, onAddRow, title }: TableProps) {
   const [editMode, setEditMode] = useState(false)
   const [editedCell, setEditedCell] = useState<{ rowIndex: number; columnId: string; value: any } | null>(null)
   const [tableData, setTableData] = useState(data)
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
+  // Update defaultColumn to format booleans and dates
   const defaultColumn = useMemo(
     () => ({
       minWidth: 100,
@@ -49,6 +56,14 @@ export default function SortableResizableTable({ columns = [], data = [], onSave
           }
         }
 
+        // Check the type of value and render accordingly
+        if (typeof value === 'boolean') {
+          return <div>{value ? 'Yes' : 'No'}</div>; // Display boolean as Yes/No
+        } else if (value instanceof Date || !isNaN(Date.parse(value))) {
+          return <div>{formatDate(value)}</div>; // Format date
+        }
+
+        // If in edit mode, show input
         if (editMode) {
           return (
             <input
@@ -59,20 +74,58 @@ export default function SortableResizableTable({ columns = [], data = [], onSave
             />
           )
         }
-        return <div>{cellValue}</div>
+
+        // Default display for other types
+        return <div>{cellValue !== undefined ? cellValue : ''}</div>
       },
     }),
     [editMode, onSaveChanges]
   )
 
+  // Custom sort functions
+  const dateSort = (rowA: any, rowB: any, columnId: string) => {
+    const dateA = new Date(rowA.values[columnId]);
+    const dateB = new Date(rowB.values[columnId]);
+    return dateA.getTime() - dateB.getTime(); // Sort by date
+  };
+
+  const numberSort = (rowA: any, rowB: any, columnId: string) => {
+    const numA = rowA.values[columnId];
+    const numB = rowB.values[columnId];
+    return numA - numB; // Sort by number
+  };
+
+  const booleanSort = (rowA: any, rowB: any, columnId: string) => {
+    const a = rowA.values[columnId];
+    const b = rowB.values[columnId];
+    return (a === b) ? 0 : a ? -1 : 1; // Sort true values before false
+  };
+
+  const stringSort = (rowA: any, rowB: any, columnId: string) => {
+    const strA = rowA.values[columnId];
+    const strB = rowB.values[columnId];
+    // Handle null values
+    if (strA === undefined && strB === undefined) return 0; // Both are null, considered equal
+    if (strA === undefined) return 1; // Nulls are considered greater than any string
+    if (strB === undefined) return -1; // Any string is considered less than null
+
+    return strA.toString().localeCompare(strB.toString()); // Sort by string
+  };
+
+  // Update memoizedColumns to use custom sort functions
   const memoizedColumns = useMemo<Column[]>(
     () =>
       columns.map((col) => ({
         ...col,
-        sortType: col.type,
+        ...defaultColumn,
+        // Use custom sort functions for boolean, date, and number types
+        sortType: col.type === 'boolean' ? booleanSort :
+                   col.type === 'date' ? dateSort :
+                   col.type === 'number' ? numberSort :
+                   stringSort, // Default to string sort
       })),
     [columns]
-  )
+  );
 
   const {
     getTableProps,
@@ -95,28 +148,18 @@ export default function SortableResizableTable({ columns = [], data = [], onSave
     setEditMode((prev) => !prev)
   }, [])
 
-  const addBlankRow = () => {
-    const newRow: Record<string, any> = columns.reduce((acc, col) => {
-      acc[col.accessor] = ''; // Initialize each column with an empty string
-      return acc;
-    }, {} as Record<string, any>);
-    setTableData((prevData) => [newRow, ...prevData]); // Add new row at the top
+  const addNewRow = () => {
+    onAddRow?.()
   };
 
-  const addNewRow = (newRow: Record<string, any>) => {
-    setTableData((prevData) => [newRow, ...prevData]); // Add new row at the top
-  };
 
-  if (columns.length === 0 || tableData.length === 0) {
-    return <div className="p-4 text-center text-gray-400">No data available</div>
-  }
 
   return (
     <div className="p-4 bg-gray-900">
       <div className="overflow-x-auto rounded-lg shadow-lg">
         <div className="bg-gray-800 rounded-lg overflow-hidden">
           <div className="flex justify-between items-center px-6 py-3 bg-gray-700">
-            <h2 className="text-lg font-semibold text-gray-300">Table Title</h2>
+            <h2 className="text-lg font-semibold text-gray-300">{title}</h2>
             <div className="flex space-x-2">
               <button
                 onClick={toggleEditMode}

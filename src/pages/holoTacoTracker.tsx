@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import './home.css';
 import SortableResizableTable from '../components/SortableResizableTable';
-import { useQuery } from '@tanstack/react-query'; // Update import to use @tanstack/react-query
-import { getAllBottlesByEmail } from '../server/holoTaco/holoTacoBottleQueries'; // Import the function
+import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query'; // Update import to use @tanstack/react-query
 import { apiRequest } from '../utils/clientAPIService';
+import { TacoBottle } from '../utils/holoTacoTypes';
+import { v4 as uuidv4 } from 'uuid'; // Import the uuid function
+import AddBottleModal from '../components/holoTaco/addPolishModal';
 
 interface HoloTacoTrackerData {
     name: string;
@@ -19,23 +21,25 @@ interface HoloTacoTrackerData {
 const HoloTacoTracker: React.FC = () => {
 
     const email = 'bookdolphin84@gmail.com';
-    const [data, setData] = useState<HoloTacoTrackerData[]>(
-        [
-            { name: 'Pink Taco', formula: 'Metallic', opened: 'Yes', swatched: 'Yes', retired: 'No', limited: 'Yes', quantity: 1, location: 'Location 1' },
-            { name: 'Blue Taco', formula: 'Multichrome', opened: 'Yes', swatched: 'Yes', retired: 'No', limited: 'Yes', quantity: 2, location: 'Location 2' },
-            { name: 'Green Taco', formula: 'Crushed Holographic', opened: 'Yes', swatched: 'Yes', retired: 'No', limited: 'Yes', quantity: 3, location: 'Location 3' },
-        ]
-    );
+    const [isBottleModalOpen, setIsBottleModalOpen] = useState(false);
 
-    const { data: bottlesData, isLoading, error } = useQuery({ 
+
+    const bottlesQuery = useQuery({ 
         queryKey: ['bottles'], 
         queryFn: () => apiRequest(`/api/bottles?email=${email}`, 'GET') 
     });
-
-    const { data: polishData, isLoading: polishLoading, error: polishError } = useQuery({ 
-        queryKey: ['polishes'], 
-        queryFn: () => apiRequest('/api/polishes', 'GET') 
+    const addBottleMutation = useMutation({
+        mutationFn: (newBottle: TacoBottle) => apiRequest(`/api/bottles`, 'POST', {
+            ...newBottle,
+            email: email,
+            bottleId: uuidv4(), // Generate a new GUID using uuidv4
+        }),
     });
+
+    const polishQuery = useQuery<any, Error, any, string[]>({
+        queryKey: ['polishes'], 
+        queryFn: () => apiRequest('/api/polishes', 'GET'),
+    } as UseQueryOptions<any, Error, any, string[]>); // Cast to UseQueryOptions
     
     return (
         <>
@@ -50,21 +54,27 @@ const HoloTacoTracker: React.FC = () => {
                 { Header: 'Quantity', accessor: 'quantity', type: 'number' },
                 { Header: 'Location', accessor: 'location', type: 'string' },
             ]}
-                data={bottlesData}
+            data={bottlesQuery.data}
+            title="Polish Tracker"
+            onAddRow={() => setIsBottleModalOpen(true)}
+            />
+            <AddBottleModal
+                isOpen={isBottleModalOpen}
+                onClose={() => setIsBottleModalOpen(false)}
+                ownerEmail={email}
             />
 
             <SortableResizableTable
                 columns={[
-                    { Header: 'Name', accessor: 'name', type: 'string' },
-                    { Header: 'Formula', accessor: 'formula', type: 'string' },
-                    { Header: 'Opened', accessor: 'opened', type: 'string' },
-                    { Header: 'Swatched', accessor: 'swatched', type: 'string' },
-                    { Header: 'Retired', accessor: 'retired', type: 'string' },
-                    { Header: 'Limited', accessor: 'limited', type: 'string' },
-                    { Header: 'Quantity', accessor: 'quantity', type: 'number' },
-                    { Header: 'Location', accessor: 'location', type: 'string' },
+                    { Header: 'Polish Name', accessor: 'polishname', type: 'string' },
+                    { Header: 'Formula Name', accessor: 'formulaname', type: 'string' },
+                    { Header: 'Retired', accessor: 'retired', type: 'boolean' },
+                    { Header: 'Limited', accessor: 'limited', type: 'boolean' },
+                    { Header: 'Release Date', accessor: 'releasedate', type: 'date' },
+                    { Header: 'Collection Name', accessor: 'collectionname', type: 'string' },
                 ]}
-                data={polishData}
+                data={polishQuery.data}
+                title="Polish Database"
             />
         </>
     );

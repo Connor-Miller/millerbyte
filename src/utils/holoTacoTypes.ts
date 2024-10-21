@@ -16,7 +16,7 @@ export type TacoBottle = {
     bottleId: string;
     polishName: string;
     ownerEmail: string;
-    opened: string;
-    swatched: string;
+    isOpened: boolean;
+    isSwatched: boolean;
     location: string;
 }

@@ -1,4 +1,4 @@
-const insertPolishesSQLString: string = `INSERT INTO polishes (polishName, polishFormula, releaseDate, retired, limitedEdition, collectionName)
+const insertPolishesSQLString = `INSERT INTO polishes (polishName, polishFormula, releaseDate, retired, limitedEdition, collectionName)
 VALUES
 ('One-Coat Black', NULL, '2019-07-06', FALSE, FALSE, 'Holo Taco Launch Collection'),
 ('Royal-Tea Blue', NULL, '2019-07-06', FALSE, FALSE, 'Holo Taco Launch Collection'),

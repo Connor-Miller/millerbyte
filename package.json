@@ -1,19 +1,20 @@
 {
   "name": "millerbyte",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start:server": "ts-node src/server/index.ts",
-    "start:client": "cd client && npm start",
+    "start:server": "node src/server/index.js",
+    "start:client": "vite",
     "start": "concurrently \"npm run start:server\" \"npm run start:client\""
   },
   "dependencies": {
     "@tanstack/react-query": "^5.59.15",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "lucide-react": "^0.453.0",
@@ -21,7 +22,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-resizable": "^3.0.5",
-    "react-table": "^7.8.0"
+    "react-table": "^7.8.0",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
@@ -34,6 +36,7 @@
     "@types/react-dom": "^18.3.0",
     "@types/react-resizable": "^3.0.8",
     "@types/react-table": "^7.7.20",
+    "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
     "concurrently": "^9.0.1",

@@ -1,6 +1,6 @@
 // Function to make a fetch request to the HoloTaco API
 export async function apiRequest(path: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE', body?: any) {
-    const baseUrl = 'http://localhost:3000'; // Adjust the base URL as needed
+    const baseUrl = 'http://localhost:3001'; // Adjust the base URL as needed
     const options: RequestInit = {
         method,
         headers: {

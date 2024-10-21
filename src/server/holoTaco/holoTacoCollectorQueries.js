@@ -1,12 +1,11 @@
-import PostgresService from "../postgresService";
-import { TacoCollector } from "../../utils/holoTacoTypes";
+import PostgresService from "../postgresService.js";
 
 /**
  * Add a new collector to the database
  * @param collector - The collector to add
  * @returns The result of the query
  */
-export function addNewCollector(collector: TacoCollector) {
+export function addNewCollector(collector) {
     const sqlString = `INSERT INTO collectors (name, email, lastLoginDate, joinDate)
     VALUES ($1, $2, $3, $4)`;
     const postgresService = new PostgresService();
@@ -18,7 +17,7 @@ export function addNewCollector(collector: TacoCollector) {
  * @param email - The email of the collector to get
  * @returns The result of the query
  */
-export function getCollectorByEmail(email: string) {
+export function getCollectorByEmail(email) {
     const sqlString = `SELECT * FROM collectors WHERE email = $1`;
     const postgresService = new PostgresService();
     return postgresService.performQuery(sqlString, [email]);
@@ -29,7 +28,7 @@ export function getCollectorByEmail(email: string) {
  * @param collector - The collector to update
  * @returns The result of the query
  */
-export function updateCollector(collector: TacoCollector) {
+export function updateCollector(collector) {
     const sqlString = `UPDATE collectors SET name = $1, lastLoginDate = $2 WHERE email = $3`;
     const postgresService = new PostgresService();
     return postgresService.performQuery(sqlString, [collector.name, collector.lastLoginDate, collector.email]);
@@ -40,7 +39,7 @@ export function updateCollector(collector: TacoCollector) {
  * @param email - The email of the collector to delete
  * @returns The result of the query
  */
-export function deleteCollector(email: string) {
+export function deleteCollector(email) {
     const sqlString = `DELETE FROM collectors WHERE email = $1`;
     const postgresService = new PostgresService();
     return postgresService.performQuery(sqlString, [email]);

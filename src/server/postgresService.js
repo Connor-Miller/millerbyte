@@ -1,11 +1,10 @@
-import { Client } from 'pg';
+import pkg from 'pg'; // Import the entire module as pkg
+const { Client } = pkg; // Destructure Client from pkg
 import dotenv from 'dotenv';
 
 dotenv.config(); // Load environment variables from .env file
 
 class PostgresService {
-    private client: Client;
-
     constructor() {
         this.client = new Client({
             user: process.env.DB_USER,
@@ -19,23 +18,31 @@ class PostgresService {
         this.connectToDatabase();
     }
 
-    private async connectToDatabase() {
+    async connectToDatabase() {
         try {
             await this.client.connect();
             console.log('Connected to PostgreSQL database');
         } catch (error) {
             console.error('Connection to PostgreSQL database failed', error);
+            this.closeConnection();
         }
     }
 
-    public async performQuery(query: string, values: any[]) {
+    async performQuery(query, values) {
         try {
-            return this.client.query(query, values);
+            const result = await this.client.query(query, values);
+            this.closeConnection(); // Close connection after query execution
+            return result;
         } catch (error) {
             console.error('Error performing query', error);
+            this.closeConnection();
         }
     }
 
+    closeConnection() {
+        this.client.end(); // Close the database connection
+        console.log('Database connection closed');
+    }
 }
 
 export default PostgresService;

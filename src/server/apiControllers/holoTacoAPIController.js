@@ -1,18 +1,24 @@
-import { TacoBottle, TacoCollector, TacoPolish } from '../../utils/holoTacoTypes';
-import { addNewBottle, getAllBottlesByEmail, getBottleById, updateBottle, deleteBottle } from '../holoTaco/holoTacoBottleQueries';
-import { Request, Response, Router } from 'express';
-import { addNewCollector, deleteCollector, getCollectorByEmail, updateCollector } from '../holoTaco/holoTacoCollectorQueries';
-import { getAllPolishes, getPolishByName, addNewPolish, updatePolish, deletePolish } from '../holoTaco/holoTacoPolishQueries';
+import { addNewBottle, getAllBottlesByEmail, getBottleById, updateBottle, deleteBottle } from '../holoTaco/holoTacoBottleQueries.js';
+import { Router } from 'express';
+import { addNewCollector, deleteCollector, getCollectorByEmail, updateCollector } from '../holoTaco/holoTacoCollectorQueries.js';
+import { getAllPolishes, getPolishByName, addNewPolish, updatePolish, deletePolish } from '../holoTaco/holoTacoPolishQueries.js';  
 
-class HoloTacoAPIController {
-    public router: Router;
+
+export function createHoloTacoAPIController() {
+    return new holoTacoAPIController();
+}
+
+/**
+ * The controller for the holoTaco API
+ */
+class holoTacoAPIController {
 
     constructor() {
         this.router = Router(); // Initialize the router
         this.initializeRoutes(); // Set up routes
     }
 
-    private initializeRoutes() {
+    initializeRoutes() {
         this.router.get('/api/bottles', this.getAllBottlesByEmail);
         this.router.post('/api/bottles', this.addNewBottle);
         this.router.get('/api/bottles/:bottleId', this.getBottleById);
@@ -31,8 +37,8 @@ class HoloTacoAPIController {
         this.router.delete('/api/polishes/:polishName', this.deletePolish);
     }
 
-    public addNewBottle = async (req: Request, res: Response) => {
-        const bottle: TacoBottle = req.body; // Get bottle data from request body
+    addNewBottle = async (req, res) => {
+        const bottle = req.body; // Get bottle data from request body
         try {
             const result = await addNewBottle(bottle);
             res.status(201).json(result);
@@ -42,8 +48,8 @@ class HoloTacoAPIController {
         }
     };
 
-    public getAllBottlesByEmail = async (req: Request, res: Response) => {
-        const email = req.query.email as string; // Get email from query parameters
+    getAllBottlesByEmail = async (req, res) => {
+        const email = req.query.email; // Get email from query parameters
         try {
             const result = await getAllBottlesByEmail(email);
             res.json(result?.rows);
@@ -53,7 +59,7 @@ class HoloTacoAPIController {
         }
     };
 
-    public getBottleById = async (req: Request, res: Response) => {
+    getBottleById = async (req, res) => {
         const bottleId = req.params.bottleId; // Get bottleId from request parameters
         try {
             const result = await getBottleById(bottleId);
@@ -64,8 +70,8 @@ class HoloTacoAPIController {
         }
     };
 
-    public updateBottle = async (req: Request, res: Response) => {
-        const bottle: TacoBottle = req.body; // Get bottle data from request body
+    updateBottle = async (req, res) => {
+        const bottle = req.body; // Get bottle data from request body
         try {
             const result = await updateBottle(bottle);
             res.json(result);
@@ -75,7 +81,7 @@ class HoloTacoAPIController {
         }
     };
 
-    public deleteBottle = async (req: Request, res: Response) => {
+    deleteBottle = async (req, res) => {
         const bottleId = req.params.bottleId; // Get bottleId from request parameters
         try {
             const result = await deleteBottle(bottleId);
@@ -86,8 +92,8 @@ class HoloTacoAPIController {
         }
     };
 
-    public addNewCollector = async (req: Request, res: Response) => {
-        const collector: TacoCollector = req.body; // Get collector data from request body
+    addNewCollector = async (req, res) => {
+        const collector = req.body; // Get collector data from request body
         try {
             const result = await addNewCollector(collector);
             res.status(201).json(result);
@@ -97,8 +103,8 @@ class HoloTacoAPIController {
         }
     }
 
-    public getCollectorByEmail = async (req: Request, res: Response) => {
-        const email = req.query.email as string; // Get email from query parameters
+    getCollectorByEmail = async (req, res) => {
+        const email = req.query.email; // Get email from query parameters
         try {
             const result = await getCollectorByEmail(email);
             res.json(result?.rows[0]);
@@ -108,8 +114,8 @@ class HoloTacoAPIController {
         }
     }
 
-    public updateCollector = async (req: Request, res: Response) => {
-        const collector: TacoCollector = req.body; // Get collector data from request body
+    updateCollector = async (req, res) => {
+        const collector = req.body; // Get collector data from request body
         try {
             const result = await updateCollector(collector);
             res.json(result);
@@ -119,8 +125,8 @@ class HoloTacoAPIController {
         }
     }
 
-    public deleteCollector = async (req: Request, res: Response) => {
-        const email = req.query.email as string; // Get email from query parameters
+    deleteCollector = async (req, res) => {
+        const email = req.query.email; // Get email from query parameters
         try {
             const result = await deleteCollector(email);
             res.json(result);
@@ -131,7 +137,7 @@ class HoloTacoAPIController {
 
     }
 
-    public getAllPolishes = async (req: Request, res: Response) => {
+    getAllPolishes = async (req, res) => {
         try {
             const result = await getAllPolishes();
             res.json(result?.rows);
@@ -141,8 +147,8 @@ class HoloTacoAPIController {
         }
     }
 
-    public getPolishByName = async (req: Request, res: Response) => {
-        const polishName = req.query.polishName as string; // Get polishName from query parameters
+    getPolishByName = async (req, res) => {
+        const polishName = req.query.polishName; // Get polishName from query parameters
         try {
             const result = await getPolishByName(polishName);
             res.json(result?.rows[0]);
@@ -152,8 +158,8 @@ class HoloTacoAPIController {
         }
     }
 
-    public addNewPolish = async (req: Request, res: Response) => {
-        const polish: TacoPolish = req.body; // Get polish data from request body
+    addNewPolish = async (req, res) => {
+        const polish = req.body; // Get polish data from request body
         try {
             const result = await addNewPolish(polish);
             res.status(201).json(result);
@@ -163,8 +169,8 @@ class HoloTacoAPIController {
         }
     }
 
-    public updatePolish = async (req: Request, res: Response) => {
-        const polish: TacoPolish = req.body; // Get polish data from request body
+    updatePolish = async (req, res) => {
+        const polish = req.body; // Get polish data from request body
         try {
             const result = await updatePolish(polish);
             res.json(result);
@@ -174,8 +180,8 @@ class HoloTacoAPIController {
         }
     }
 
-    public deletePolish = async (req: Request, res: Response) => {
-        const polishName = req.query.polishName as string; // Get polishName from query parameters
+    deletePolish = async (req, res) => {
+        const polishName = req.query.polishName; // Get polishName from query parameters
         try {
             const result = await deletePolish(polishName);
             res.json(result);
@@ -187,4 +193,4 @@ class HoloTacoAPIController {
 }
 
 // Export an instance of the controller
-export const holoTacoAPIController = new HoloTacoAPIController();
+export default holoTacoAPIController;
