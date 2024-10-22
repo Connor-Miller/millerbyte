@@ -16,7 +16,7 @@ export function getAllPolishes() {
  * @returns The result of the query
  */
 export function getPolishByName(polishName) {
-    const sqlString = `SELECT * FROM polishes WHERE polishName = $1`;
+    const sqlString = `SELECT * FROM polishes WHERE polishname = $1`;
     const postgresService = new PostgresService();
     return postgresService.performQuery(sqlString, [polishName]);
 }
@@ -27,10 +27,10 @@ export function getPolishByName(polishName) {
  * @returns The result of the query
  */
 export function addNewPolish(polish) {
-    const sqlString = `INSERT INTO polishes (polishName, formulaName, retired, limitedEdition, releaseDate, collectionName)
+    const sqlString = `INSERT INTO polishes (polishname, formulaname, retired, limitededition, releaseDate, collectionName)
     VALUES ($1, $2, $3, $4, $5, $6)`;
     const postgresService = new PostgresService();
-    return postgresService.performQuery(sqlString, [polish.polishName, polish.formulaName, polish.retired, polish.limitedEdition, polish.releaseDate, polish.collectionName]);
+    return postgresService.performQuery(sqlString, [polish.polishname, polish.formulaname, polish.retired, polish.limitededition, polish.releaseDate, polish.collectionName]);
 }
 
 /**
@@ -39,9 +39,9 @@ export function addNewPolish(polish) {
  * @returns The result of the query
  */
 export function updatePolish(polish) {
-    const sqlString = `UPDATE polishes SET formulaName = $1, retired = $2, limitedEdition = $3, releaseDate = $4, collectionName = $5 WHERE polishName = $6`;
+    const sqlString = `UPDATE polishes SET formulaname = $1, retired = $2, limitededition = $3, releaseDate = $4, collectionName = $5 WHERE polishname = $6`;
     const postgresService = new PostgresService();
-    return postgresService.performQuery(sqlString, [polish.formulaName, polish.retired, polish.limitedEdition, polish.releaseDate, polish.collectionName, polish.polishName]);
+    return postgresService.performQuery(sqlString, [polish.formulaname, polish.retired, polish.limitededition, polish.releaseDate, polish.collectionName, polish.polishname]);
 }
 
 /**
@@ -50,7 +50,7 @@ export function updatePolish(polish) {
  * @returns The result of the query
  */
 export function deletePolish(polishName) {
-    const sqlString = `DELETE FROM polishes WHERE polishName = $1`;
+    const sqlString = `DELETE FROM polishes WHERE polishname = $1`;
     const postgresService = new PostgresService();
     return postgresService.performQuery(sqlString, [polishName]);
 }

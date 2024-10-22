@@ -3,6 +3,7 @@ import { TacoBottle, TacoPolish } from '../../utils/holoTacoTypes';
 import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { apiRequest } from '../../utils/clientAPIService';
 import { v4 as uuidv4 } from 'uuid'; // Import the uuid function
+import RainbowModal from '../../components/RainbowModal'; // Import the RainbowModal component
 
 
 interface AddBottleModalProps {
@@ -16,6 +17,16 @@ const AddBottleModal: React.FC<AddBottleModalProps> = ({ isOpen, onClose, ownerE
   const [isSwatched, setIsSwatched] = useState(false); // New state for isSwatched
   const [isOpened, setIsOpened] = useState(false); // New state for isOpened
   const [selectedPolish, setSelectedPolish] = useState<string>(""); // New state for selected polish
+  const [searchPolish, setSearchPolish] = useState<string>(""); // New state for search polish
+
+  const addBottleMutation = useMutation({
+    mutationFn: (newBottle: TacoBottle) => apiRequest(`/api/bottles`, 'POST', newBottle),
+  });
+
+  const polishQuery = useQuery<any, Error, any, string[]>({
+    queryKey: ['polishes'], 
+    queryFn: () => apiRequest('/api/polishes', 'GET'),
+  } as UseQueryOptions<any, Error, any, string[]>); // Cast to UseQueryOptions
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,79 +50,78 @@ const AddBottleModal: React.FC<AddBottleModalProps> = ({ isOpen, onClose, ownerE
 
   if (!isOpen) return null;
 
-  const addBottleMutation = useMutation({
-    mutationFn: (newBottle: TacoBottle) => apiRequest(`/api/bottles`, 'POST', newBottle),
-});
-
-const polishQuery = useQuery<any, Error, any, string[]>({
-    queryKey: ['polishes'], 
-    queryFn: () => apiRequest('/api/polishes', 'GET'),
-} as UseQueryOptions<any, Error, any, string[]>); // Cast to UseQueryOptions
-
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-4 rounded shadow-lg">
-        <h2 className="text-lg font-semibold">Add New Bottle</h2>
-        <form onSubmit={handleSubmit}>
-          
-          {/* Dropdown for selecting polish */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium">Polish Name</label>
-            <select
-              value={selectedPolish || ''}
-              onChange={(e) => setSelectedPolish(e.target.value)}
-              className="border rounded p-2 w-full"
-            >
-              <option value="" disabled>Select Polish</option>
-              {/* Map through polishQuery.data to create options */}
-              {polishQuery.data?.map((polish: TacoPolish) => (
-                <option key={polish.polishName} value={polish.polishName}>{polish.polishName}</option>
-              ))}
-            </select>
-          </div>
+    <RainbowModal isOpen={isOpen} onClose={onClose} title="Add New Bottle">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Input for searching polishes */}
+        <div>
+          <label className="block text-sm font-medium">Search Polish</label>
+          <input
+            type="text"
+            onChange={(e) => setSearchPolish(e.target.value)}
+            className="border rounded p-2 w-full"
+            placeholder="Type to search..."
+          />
+        </div>
 
-          {/* Checkbox for isSwatched */}
-          <div className="mb-4">
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                checked={isSwatched}
-                onChange={() => setIsSwatched(!isSwatched)}
-                className="form-checkbox"
-              />
-              <span className="ml-2">Is Swatched</span>
-            </label>
-          </div>
+        {/* Dropdown for selecting polish */}
+        <div>
+          <label className="block text-sm font-medium">Polish Name</label>
+          <select
+            value={selectedPolish || ''}
+            onChange={(e) => setSelectedPolish(e.target.value)}
+            className="border rounded p-2 w-full"
+          >
+            <option value="" disabled>Select Polish</option>
+            {polishQuery.data?.filter((polish: TacoPolish) => 
+              polish.polishname.toLowerCase().includes(searchPolish.toLowerCase())
+            ).map((polish: TacoPolish) => (
+              <option key={polish.polishname} value={polish.polishname}>{polish.polishname}</option>
+            ))}
+          </select>
+        </div>
 
-          {/* Checkbox for isOpened */}
-          <div className="mb-4">
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                checked={isOpened}
-                onChange={() => setIsOpened(!isOpened)}
-                className="form-checkbox"
-              />
-              <span className="ml-2">Is Opened</span>
-            </label>
-          </div>
-
-          {/* Input for location */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium">Location</label>
+        {/* Checkbox for isSwatched */}
+        <div>
+          <label className="inline-flex items-center">
             <input
-              type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="border rounded p-2 w-full"
+              type="checkbox"
+              checked={isSwatched}
+              onChange={() => setIsSwatched(!isSwatched)}
+              className="form-checkbox"
             />
-          </div>
+            <span className="ml-2">Is Swatched</span>
+          </label>
+        </div>
 
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Add Bottle</button>
-          <button type="button" onClick={onClose} className="ml-2 bg-gray-300 px-4 py-2 rounded">Cancel</button>
-        </form>
-      </div>
-    </div>
+        {/* Checkbox for isOpened */}
+        <div>
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              checked={isOpened}
+              onChange={() => setIsOpened(!isOpened)}
+              className="form-checkbox"
+            />
+            <span className="ml-2">Is Opened</span>
+          </label>
+        </div>
+
+        {/* Input for location */}
+        <div>
+          <label className="block text-sm font-medium">Location</label>
+          <input
+            type="text"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            className="border rounded p-2 w-full"
+          />
+        </div>
+
+        <button type="submit" className="bg-blue-500 text-white px-6 py-3 rounded hover:bg-blue-600 transition">Add Bottle</button>
+        <button type="button" onClick={onClose} className="ml-2 text-white bg-gray-500 px-6 py-3 rounded hover:bg-gray-600 transition">Cancel</button>
+      </form>
+    </RainbowModal>
   );
 };
 

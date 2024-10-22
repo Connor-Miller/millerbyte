@@ -1,8 +1,8 @@
 export type TacoPolish = {
-    polishName: string;
-    formulaName: string;
+    polishname: string;
+    formulaname: string;
     retired: string;
-    limitedEdition: string;
+    limitededition: string;
     releaseDate: Date;
     collectionName: string;
 }

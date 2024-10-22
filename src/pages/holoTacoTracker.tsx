@@ -3,8 +3,6 @@ import './home.css';
 import SortableResizableTable from '../components/SortableResizableTable';
 import { useMutation, useQuery, UseQueryOptions } from '@tanstack/react-query'; // Update import to use @tanstack/react-query
 import { apiRequest } from '../utils/clientAPIService';
-import { TacoBottle } from '../utils/holoTacoTypes';
-import { v4 as uuidv4 } from 'uuid'; // Import the uuid function
 import AddBottleModal from '../components/holoTaco/addPolishModal';
 
 interface HoloTacoTrackerData {
@@ -28,13 +26,6 @@ const HoloTacoTracker: React.FC = () => {
         queryKey: ['bottles'], 
         queryFn: () => apiRequest(`/api/bottles?email=${email}`, 'GET') 
     });
-    const addBottleMutation = useMutation({
-        mutationFn: (newBottle: TacoBottle) => apiRequest(`/api/bottles`, 'POST', {
-            ...newBottle,
-            email: email,
-            bottleId: uuidv4(), // Generate a new GUID using uuidv4
-        }),
-    });
 
     const polishQuery = useQuery<any, Error, any, string[]>({
         queryKey: ['polishes'], 
@@ -43,6 +34,11 @@ const HoloTacoTracker: React.FC = () => {
     
     return (
         <>
+        <AddBottleModal
+                isOpen={isBottleModalOpen}
+                onClose={() => setIsBottleModalOpen(false)}
+                ownerEmail={email}
+            />
             <SortableResizableTable
                 columns={[
                 { Header: 'Name', accessor: 'name', type: 'string' },
@@ -56,13 +52,13 @@ const HoloTacoTracker: React.FC = () => {
             ]}
             data={bottlesQuery.data}
             title="Polish Tracker"
-            onAddRow={() => setIsBottleModalOpen(true)}
+            onAddRow={(e) => {
+                e.preventDefault();
+                console.log("Adding row");
+                setIsBottleModalOpen(true)}
+            }
             />
-            <AddBottleModal
-                isOpen={isBottleModalOpen}
-                onClose={() => setIsBottleModalOpen(false)}
-                ownerEmail={email}
-            />
+            
 
             <SortableResizableTable
                 columns={[

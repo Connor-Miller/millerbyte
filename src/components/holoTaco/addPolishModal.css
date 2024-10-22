@@ -1,0 +1,30 @@
+/* src/components/holoTaco/addPolishModal.css */
+.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9000; /* Ensure the modal is above other content */
+}
+
+.bg-black {
+  background-color: rgba(0, 0, 0, 0.7); /* Dark overlay */
+}
+
+.bg-white {
+  padding: 1.5rem; /* Increased padding for roomy spacing */
+}
+
+input, select {
+  padding: 0.75rem; /* Increased padding for inputs and selects */
+  margin-bottom: 1rem; /* Space between inputs */
+}
+
+button {
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for buttons */
+}
+
+button:hover {
+  transform: translateY(-2px); /* Slight lift on hover */
+}

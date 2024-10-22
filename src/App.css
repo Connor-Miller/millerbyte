@@ -10,7 +10,6 @@
 
 main.content {
   padding-top: 110px; /* Should match the header height */
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

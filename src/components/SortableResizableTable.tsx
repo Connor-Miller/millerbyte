@@ -15,7 +15,7 @@ interface TableProps {
   columns?: TableColumn[]
   data?: any[]
   onSaveChanges?: (rowIndex: number, columnId: string, value: any) => void
-  onAddRow?: () => void
+  onAddRow?: (e: React.MouseEvent<HTMLButtonElement>) => void
   title?: string
 }
 
@@ -29,7 +29,7 @@ export default function SortableResizableTable({ columns = [], data = [], onSave
   const [editMode, setEditMode] = useState(false)
   const [editedCell, setEditedCell] = useState<{ rowIndex: number; columnId: string; value: any } | null>(null)
   const [tableData, setTableData] = useState(data)
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  //const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
   // Update defaultColumn to format booleans and dates
   const defaultColumn = useMemo(
@@ -148,8 +148,9 @@ export default function SortableResizableTable({ columns = [], data = [], onSave
     setEditMode((prev) => !prev)
   }, [])
 
-  const addNewRow = () => {
-    onAddRow?.()
+  const addNewRow = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    onAddRow?.(e);
   };
 
 
@@ -180,7 +181,7 @@ export default function SortableResizableTable({ columns = [], data = [], onSave
                 )}
               </button>
               <button
-                onClick={() => setIsModalOpen(true)} // Open the modal
+                onClick={(e) => onAddRow?.(e)} // Open the modal
                 className="px-4 py-2 rounded-md bg-gray-600 hover:bg-gray-700 transition-colors duration-200"
               >
                 Add Row
@@ -269,12 +270,12 @@ export default function SortableResizableTable({ columns = [], data = [], onSave
           </table>
         </div>
       </div>
-      <AddRowModal
+      {/* <AddRowModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)} // Close the modal
         onAddRow={addNewRow}
         columns={columns}
-      />
+      /> */}
     </div>
   )
 }
