@@ -21,7 +21,24 @@ export function addNewBottle(bottle) {
  * @returns The result of the query
  */
 export function getAllBottlesByEmail(email) {
-    const sqlString = `SELECT * FROM bottles WHERE owneremail = $1`;
+    const sqlString = `
+        SELECT 
+            b.bottleid,
+            p.polishname as polishname,
+            p.formulaname as formulaname,
+            b.isopened as isopened,
+            b.isswatched as isswatched,
+            p.retired,
+            p.limitededition as limited,
+            1 as quantity,
+            b.location
+        FROM 
+            bottles b
+        JOIN 
+            polishes p ON b.polishname = p.polishname
+        WHERE 
+            b.owneremail = $1
+    `;
     const postgresService = new PostgresService();
     return postgresService.performQuery(sqlString, [email]);
 }
